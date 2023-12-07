@@ -1,0 +1,2 @@
+newfile1
+commit2
