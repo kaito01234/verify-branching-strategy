@@ -1,0 +1,42 @@
+name: Deploy With Tag and Force Push
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name to create and push'
+        required: true
+      environment:
+        description: 'Target environment branch to force push'
+        required: true
+        type: choice
+        options:
+          - integration
+          - staging
+          - production
+
+jobs:
+  create_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Fetch all history for all tags and branches
+
+    - name: Configure Git
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+
+    - name: Create and Push Tag
+      run: |
+        git tag ${{ github.event.inputs.tag_name }}
+        git push origin ${{ github.event.inputs.tag_name }}
+
+    - name: Force Push to Environment Branch
+      run: |
+        git fetch --all
+        git checkout ${{ github.event.inputs.environment }}
+        git reset --hard HEAD
+        git push origin ${{ github.event.inputs.environment }} --force
