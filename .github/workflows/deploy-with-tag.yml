@@ -33,7 +33,7 @@ jobs:
 
     - name: Create and Push Tag
       run: |
-        git tag --force ${{ github.event.inputs.tag_name }}
+        git tag ${{ github.event.inputs.tag_name }}
         git push origin ${{ github.event.inputs.tag_name }}
 
     - name: Force Push to Environment Branch
