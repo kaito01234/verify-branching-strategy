@@ -1,0 +1,27 @@
+name: Deploy to Staging
+
+on:
+  push:
+    tags:
+      - 'v.*-staging'
+
+jobs:
+  sync_branches:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Git config
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+
+    - name: Force push to staging
+      run: |
+        git fetch --all
+        git checkout staging
+        git reset --hard ${{ github.ref }}
+        git push origin staging --force-with-lease
