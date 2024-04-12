@@ -40,5 +40,5 @@ jobs:
       run: |
         git fetch --all
         git checkout ${{ github.event.inputs.environment }}
-        git reset --hard HEAD
-        git push origin ${{ github.event.inputs.environment }} --force
+        git reset --hard ${{ github.ref }}
+        git push origin ${{ github.event.inputs.environment }} --force-with-lease
