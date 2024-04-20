@@ -1,4 +1,4 @@
-name: Deploy With Tag and Force Push
+name: Deploy With Force Push
 
 on:
   workflow_dispatch:
