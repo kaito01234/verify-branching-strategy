@@ -9,9 +9,7 @@ on:
         type: choice
         options:
           - development
-          - development2
           - integration
-          - integration2
           - staging
           - production
 
@@ -35,7 +33,5 @@ jobs:
 
     - name: Force Push to Environment Branch
       run: |
-        git fetch --all
-        git checkout ${{ github.event.inputs.environment }}
-        git reset --hard ${{ github.ref }}
-        git push origin ${{ github.event.inputs.environment }} --force-with-lease
+        git tag v.1-${{ github.event.inputs.environment }}
+        git push -f origin v.1-${{ github.event.inputs.environment }}
