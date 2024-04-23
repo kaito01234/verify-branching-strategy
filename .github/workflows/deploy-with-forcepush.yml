@@ -16,15 +16,17 @@ on:
           - production
 
 jobs:
-  create_and_deploy:
+  deploy:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
+    permissions:
+      contents: write
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-        # token: ${{ secrets.CUSTOM_PAT }}
+      # token: ${{ secrets.CUSTOM_PAT }}
 
     - name: Configure Git
       run: |
