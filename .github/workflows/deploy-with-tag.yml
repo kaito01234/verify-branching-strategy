@@ -23,6 +23,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Configure Git
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+
     - name: Check if Tag Exists
       id: check_tag
       run: |
@@ -31,11 +36,6 @@ jobs:
         fi
       env:
         TAG: v.1-${{ github.event.inputs.environment }}
-
-    - name: Configure Git
-      run: |
-        git config user.name github-actions
-        git config user.email github-actions@github.com
 
     - name: Force Push to Environment Branch
       run: |
