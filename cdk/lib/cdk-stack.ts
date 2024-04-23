@@ -29,7 +29,17 @@ export class CdkStack extends cdk.Stack {
 
     const approvalAction = new codepipeline_actions.ManualApprovalAction({
       actionName: 'ApprovalAction',
-  });
+    });
+
+    pipeline.addTrigger({
+      providerType: codepipeline.ProviderType.CODE_STAR_SOURCE_CONNECTION,
+      gitConfiguration: {
+        sourceAction,
+        pushFilter: [{
+          tagsIncludes: ['v.*'],
+        }],
+      },
+    })
 
     pipeline.addStage({
       stageName: 'Source',

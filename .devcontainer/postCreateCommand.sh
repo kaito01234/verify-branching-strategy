@@ -9,4 +9,3 @@ echo 'alias sso="source /workspaces/nextgen_payroll_infra/aws_connect.sh"' >> ~/
 
 # setup volta
 volta setup
-volta pin pnpm@latest
