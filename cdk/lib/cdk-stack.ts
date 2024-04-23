@@ -50,7 +50,7 @@ export class CdkStack extends cdk.Stack {
       gitConfiguration: {
         sourceAction,
         pushFilter: [{
-          tagsIncludes: ['v.*'],
+          tagsIncludes: ['v.*-development'],
         }],
       },
     })

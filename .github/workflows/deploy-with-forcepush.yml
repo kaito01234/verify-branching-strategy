@@ -33,5 +33,5 @@ jobs:
 
     - name: Force Push to Environment Branch
       run: |
-        git tag v.1-${{ github.event.inputs.environment }}
+        git tag -f v.1-${{ github.event.inputs.environment }}
         git push -f origin v.1-${{ github.event.inputs.environment }}
