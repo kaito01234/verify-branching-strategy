@@ -22,9 +22,15 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-      # token: ${{ secrets.CUSTOM_PAT }}
+
+    - name: Check if Tag Exists
+      id: check_tag
+      run: |
+        if git fetch --tags && git rev-parse --verify --quiet $TAG > /dev/null; then
+          git push origin --quiet --delete $TAG
+        fi
+      env:
+        TAG: v.1-${{ github.event.inputs.environment }}
 
     - name: Configure Git
       run: |
@@ -33,5 +39,7 @@ jobs:
 
     - name: Force Push to Environment Branch
       run: |
-        git tag -f v.1-${{ github.event.inputs.environment }}
-        git push -f origin v.1-${{ github.event.inputs.environment }}
+        git tag -f $TAG
+        git push origin $TAG
+      env:
+        TAG: v.1-${{ github.event.inputs.environment }}
