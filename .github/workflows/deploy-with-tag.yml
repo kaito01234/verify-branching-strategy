@@ -3,9 +3,6 @@ name: Deploy With Force Push
 on:
   workflow_dispatch:
     inputs:
-      commit_id:
-        description: 'コミットIDを指定してデプロイする(ブランチ指定の場合は空文字を入力)'
-        type: string
       environment:
         description: 'デプロイ先を選択'
         required: true
@@ -15,10 +12,15 @@ on:
           - integration
           - staging
           - production
+      commit_id:
+        description: 'コミットIDを指定してデプロイする(ブランチ指定の場合は空文字を入力)'
+        type: string
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
