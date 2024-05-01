@@ -26,6 +26,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         ref: ${{ github.event.inputs.commit_id }}
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
     - name: Configure Git
       run: |
