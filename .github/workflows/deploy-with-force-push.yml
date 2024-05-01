@@ -27,7 +27,7 @@ jobs:
       with:
         ref: ${{ github.event.inputs.commit_id }}
         ssh-key: ${{ secrets.PRIVATE_DEPLOY_KEY }}
-        token: ''
+        token: ${{ github.token }}
 
     - name: Configure Git
       run: |
