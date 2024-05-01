@@ -1,5 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import * as codebuild from 'aws-cdk-lib/aws-codebuild';
 import * as codepipeline from 'aws-cdk-lib/aws-codepipeline';
 import * as codepipeline_actions from 'aws-cdk-lib/aws-codepipeline-actions';
 
@@ -27,16 +28,29 @@ export class CdkStack extends cdk.Stack {
       connectionArn: `arn:aws:codestar-connections:ap-northeast-1:948669373988:connection/868491e5-ad8b-4ec1-bdb3-43b676d9021b`,
     });
 
-    const approvalAction = new codepipeline_actions.ManualApprovalAction({
-      actionName: 'ApprovalAction',
-    });
+    const buildAction = new codepipeline_actions.CodeBuildAction({
+      actionName: "Build",
+      project: new codebuild.PipelineProject(this, 'CodeBuild', {
+        buildSpec: codebuild.BuildSpec.fromObject({
+          version: '0.2',
+          phases: {
+            build: {
+              commands:[
+                'cat newfile1.md',
+              ],
+            },
+          },
+        }),
+      }),
+      input: sourceOutput,
+    })
 
     pipeline.addTrigger({
       providerType: codepipeline.ProviderType.CODE_STAR_SOURCE_CONNECTION,
       gitConfiguration: {
         sourceAction,
         pushFilter: [{
-          tagsIncludes: ['v.*'],
+          tagsIncludes: ['v.*-development'],
         }],
       },
     })
@@ -48,7 +62,7 @@ export class CdkStack extends cdk.Stack {
 
     pipeline.addStage({
       stageName: 'Approval',
-      actions: [approvalAction],
+      actions: [buildAction],
     });
 
   }

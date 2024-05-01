@@ -6,6 +6,5 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
 ## Useful commands
 
-* `export VOLTA_FEATURE_PNPM=1`
-* `pnpm install`
+* `pnpm i`
 * `pnpm cdk deploy --all`

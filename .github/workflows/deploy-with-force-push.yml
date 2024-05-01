@@ -4,29 +4,29 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Target environment branch to force push'
+        description: 'デプロイ先を選択'
         required: true
         type: choice
         options:
           - development
-          - development2
           - integration
-          - integration2
           - staging
           - production
+      commit_id:
+        description: 'コミットIDを指定してデプロイする(ブランチ指定の場合は空文字を入力)'
+        type: string
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
     permissions:
       contents: write
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0
-      # token: ${{ secrets.CUSTOM_PAT }}
+        ref: ${{ github.event.inputs.commit_id }}
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
     - name: Configure Git
       run: |
@@ -36,6 +36,8 @@ jobs:
     - name: Force Push to Environment Branch
       run: |
         git fetch --all
-        git checkout ${{ github.event.inputs.environment }}
+        git checkout $BRANCH
         git reset --hard ${{ github.ref }}
-        git push origin ${{ github.event.inputs.environment }} --force-with-lease
+        git push origin $BRANCH --force-with-lease
+      env:
+        BRANCH: ${{ github.event.inputs.environment }}
