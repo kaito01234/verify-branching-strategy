@@ -37,7 +37,7 @@ jobs:
       run: |
         git fetch --all
         git checkout $BRANCH
-        git reset --hard ${{ github.ref }}
+        git reset --hard ${{ github.sha }}
         git push origin $BRANCH --force-with-lease
       env:
         BRANCH: ${{ github.event.inputs.environment }}
