@@ -35,9 +35,10 @@ jobs:
 
     - name: Force Push to Environment Branch
       run: |
+        git branch -f ${{ github.ref }}
         git fetch --all
         git checkout $BRANCH
-        git reset --hard ${{ github.sha }}
+        git reset --hard ${{ github.ref }}
         git push origin $BRANCH --force-with-lease
       env:
         BRANCH: ${{ github.event.inputs.environment }}
