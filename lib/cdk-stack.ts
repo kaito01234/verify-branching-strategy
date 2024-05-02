@@ -36,7 +36,7 @@ export class CdkStack extends cdk.Stack {
           phases: {
             build: {
               commands:[
-                'cat newfile1.md',
+                'cat fixfiles/newfile1.md',
               ],
             },
           },
