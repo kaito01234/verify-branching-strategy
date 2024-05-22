@@ -33,7 +33,7 @@ jobs:
       - name: Check required inputs
         if: github.event.inputs.environment == 'production'
         run: |
-          if [[ "$IS_PRODUCTION" != true || -z "$VERSION" || -z "$LAST_TAG" ]]; then
+          if [[ "$IS_PRODUCTION" != true || -z "$VERSION" ]]; then
             echo "Error: production, version, and last_tag inputs are required when environment is production"
             exit 1
           fi
@@ -41,7 +41,6 @@ jobs:
         env:
           IS_PRODUCTION: ${{ github.event.inputs.is_production }}
           VERSION: ${{ github.event.inputs.version }}
-          LAST_TAG: ${{ github.event.inputs.last_tag }}
 
       - name: Checkout repository
         uses: actions/checkout@v4
