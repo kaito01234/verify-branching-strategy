@@ -1,0 +1,93 @@
+name: Deploy With Force Push 2
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'デプロイ先を選択'
+        required: true
+        type: choice
+        options:
+          - development
+          - integration
+          - staging
+          - production
+      commit_id:
+        description: 'コミットIDを指定してデプロイする(ブランチ指定の場合は空文字を入力)'
+        type: string
+      is_production:
+        description: '本番環境にデプロイする(以下も入力必要があります)'
+        type: boolean
+      version:
+        description: 'バージョン'
+        type: string
+      last_tag:
+        description: '1つ前のリリースタグ(空文字の場合は自動決定)'
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Check required inputs
+        if: ${{ github.event.inputs.production == true }}
+        run: |
+          if [[ "$IS_PRODUCTION" != true || -z "$VERSION" || -z "$LAST_TAG" ]]; then
+            echo "Error: production, version, and last_tag inputs are required when environment is production"
+            exit 1
+          fi
+        shell: bash
+        env:
+          IS_PRODUCTION: ${{ github.event.inputs.is_production }}
+          VERSION: ${{ github.event.inputs.version }}
+          LAST_TAG: ${{ github.event.inputs.last_tag }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.commit_id }}
+          ssh-key: ${{ secrets.PRIVATE_DEPLOY_KEY }}
+          fetch-depth: 1
+
+      - name: Configure Git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Force Push to Environment Branch
+        run: |
+          git branch -f ${{ github.ref }}
+          git fetch --all
+          git checkout $BRANCH
+          git reset --hard ${{ github.ref }}
+          git push origin $BRANCH --force-with-lease
+        env:
+          BRANCH: ${{ github.event.inputs.environment }}
+
+  tag:
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: ${{ github.event.inputs.production == true }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.commit_id }}
+          fetch-depth: 1
+
+      - name: Configure Git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Get previous tag
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const commits = await github.rest.repos.listTags({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 2
+            })
+            console.log(commits)

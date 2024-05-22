@@ -22,24 +22,24 @@ jobs:
     permissions:
       contents: write
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.inputs.commit_id }}
-        ssh-key: ${{ secrets.PRIVATE_DEPLOY_KEY }}
-        token: ${{ github.token }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.commit_id }}
+          ssh-key: ${{ secrets.PRIVATE_DEPLOY_KEY }}
+          token: ${{ github.token }}
 
-    - name: Configure Git
-      run: |
-        git config user.name github-actions
-        git config user.email github-actions@github.com
+      - name: Configure Git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
 
-    - name: Force Push to Environment Branch
-      run: |
-        git branch -f ${{ github.ref }}
-        git fetch --all
-        git checkout $BRANCH
-        git reset --hard ${{ github.ref }}
-        git push origin $BRANCH --force-with-lease
-      env:
-        BRANCH: ${{ github.event.inputs.environment }}
+      - name: Force Push to Environment Branch
+        run: |
+          git branch -f ${{ github.ref }}
+          git fetch --all
+          git checkout $BRANCH
+          git reset --hard ${{ github.ref }}
+          git push origin $BRANCH --force-with-lease
+        env:
+          BRANCH: ${{ github.event.inputs.environment }}
