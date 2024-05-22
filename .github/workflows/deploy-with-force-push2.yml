@@ -31,7 +31,7 @@ jobs:
     environment: ${{ github.event.inputs.environment }}
     steps:
       - name: Check required inputs
-        if: ${{ github.event.inputs.environment == "production" }}
+        if: github.event.inputs.environment == 'production'
         run: |
           if [[ "$IS_PRODUCTION" != true || -z "$VERSION" || -z "$LAST_TAG" ]]; then
             echo "Error: production, version, and last_tag inputs are required when environment is production"
