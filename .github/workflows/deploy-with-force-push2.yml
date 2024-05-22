@@ -16,7 +16,7 @@ on:
         description: 'コミットIDを指定してデプロイする(ブランチ指定の場合は空文字を入力)'
         type: string
       is_production:
-        description: '本番環境にデプロイする(以下も入力必要があります)'
+        description: '本番環境にデプロイする(以降の項目も入力する必要があります)'
         type: boolean
       version:
         description: 'バージョン'
@@ -31,7 +31,7 @@ jobs:
     environment: ${{ github.event.inputs.environment }}
     steps:
       - name: Check required inputs
-        if: ${{ github.event.inputs.production == true }}
+        if: ${{ github.event.inputs.environment == "production" }}
         run: |
           if [[ "$IS_PRODUCTION" != true || -z "$VERSION" || -z "$LAST_TAG" ]]; then
             echo "Error: production, version, and last_tag inputs are required when environment is production"

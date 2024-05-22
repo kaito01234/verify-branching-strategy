@@ -24,7 +24,7 @@ export class CdkStack extends cdk.Stack {
       repo: 'github-branching-strategy',
       branch: 'main',
       output: sourceOutput,
-      triggerOnPush: false,
+      triggerOnPush: true,
       connectionArn: `arn:aws:codestar-connections:ap-northeast-1:948669373988:connection/868491e5-ad8b-4ec1-bdb3-43b676d9021b`,
     });
 
@@ -45,15 +45,15 @@ export class CdkStack extends cdk.Stack {
       input: sourceOutput,
     })
 
-    pipeline.addTrigger({
-      providerType: codepipeline.ProviderType.CODE_STAR_SOURCE_CONNECTION,
-      gitConfiguration: {
-        sourceAction,
-        pushFilter: [{
-          tagsIncludes: ['v.*-development'],
-        }],
-      },
-    })
+    // pipeline.addTrigger({
+    //   providerType: codepipeline.ProviderType.CODE_STAR_SOURCE_CONNECTION,
+    //   gitConfiguration: {
+    //     sourceAction,
+    //     pushFilter: [{
+    //       tagsIncludes: ['v.*-development'],
+    //     }],
+    //   },
+    // })
 
     pipeline.addStage({
       stageName: 'Source',
