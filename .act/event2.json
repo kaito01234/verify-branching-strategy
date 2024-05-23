@@ -1,0 +1,9 @@
+{
+    "event": "workflow_dispatch",
+    "inputs": {
+        "environment": "production",
+        "commit_id": "87a10bbb3e7d6a0fed19d727118dfc2832dd1be4",
+        "is_production": true,
+        "version": "0.0.1-20240522"
+    }
+}

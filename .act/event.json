@@ -1,0 +1,8 @@
+{
+    "event": "workflow_dispatch",
+    "inputs": {
+        "environment": "production",
+        "is_production": true,
+        "version": "0.0.1-20240522"
+    }
+}

@@ -28,3 +28,7 @@ ssh-keygen -t ed25519 -f ./deploy_key -N ""
 
 
 - リリースブランチのRulesetsに、Bypass list = Deploy keys を設定
+
+
+## Actionsのテスト
+act -W .github/workflows/tag-test.yml -e .act/event.json
