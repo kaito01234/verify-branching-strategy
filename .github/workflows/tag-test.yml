@@ -75,6 +75,11 @@ jobs:
         env:
           VERSION: ${{ github.event.inputs.version }}
 
+      - name: Configure Git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
       - name: Get previous tag
         if: github.event.inputs.previous_tag == null
         uses: actions/github-script@v7
@@ -90,31 +95,36 @@ jobs:
             return tags.data[0].name
           result-encoding: string
 
+      - name: Push release tag
+        run: |
+          git tag ${{ steps.release-tag.outputs.result }}
+          git push origin ${{ steps.release-tag.outputs.result }}
+
       - name: Generate release notes
         uses: actions/github-script@v7
         with:
           script: |
             const previousTag = process.env.PREVIOUS_TAG
-            const version = process.env.VERSION
+            const releaseTag = process.env.RELEASE_TAG
 
             const releaseNotes = await github.rest.repos.generateReleaseNotes({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag_name: version,
+              tag_name: releaseTag,
               previous_tag_name: previousTag
             });
             console.log(releaseNotes);
 
             const data = new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit"})
-            const title = `リリース(${version}) ${data}`
+            const title = `リリース(${releaseTag}) ${data}`
 
             await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag_name: version,
+              tag_name: releaseTag,
               name: title,
               body: releaseNotes.data.body,
             });
         env:
           PREVIOUS_TAG: ${{ steps.get-previous.outputs.result && steps.get-previous.outputs.result || github.event.inputs.previous_tag }}
-          VERSION: ${{ steps.release-tag.outputs.result }}
+          RELEASE_TAG: ${{ steps.release-tag.outputs.result }}
