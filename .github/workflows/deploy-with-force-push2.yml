@@ -16,7 +16,7 @@ on:
         description: 'コミットIDを指定してデプロイする(ブランチ指定の場合は空文字を入力)'
         type: string
       is_production:
-        description: '本番環境にデプロイする(以降の項目も入力する必要があります)'
+        description: '本番環境にデプロイする(バージョンも入力する必要があります)'
         type: boolean
       version:
         description: 'バージョン'
