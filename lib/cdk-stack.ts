@@ -28,23 +28,30 @@ export class CdkStack extends cdk.Stack {
       connectionArn: `arn:aws:codestar-connections:ap-northeast-1:948669373988:connection/868491e5-ad8b-4ec1-bdb3-43b676d9021b`,
     });
 
-    const buildAction = new codepipeline_actions.CodeBuildAction({
-      actionName: "Build",
-      project: new codebuild.PipelineProject(this, 'CodeBuild', {
-        buildSpec: codebuild.BuildSpec.fromObject({
-          version: '0.2',
-          phases: {
-            build: {
-              commands:[
-                'echo $CODEBUILD_RESOLVED_SOURCE_VERSION',
-                'cat fixfiles/newfile1.md',
-              ],
-            },
+    const build = new codebuild.PipelineProject(this, 'CodeBuild', {
+      buildSpec: codebuild.BuildSpec.fromObject({
+        version: '0.2',
+        phases: {
+          build: {
+            commands: [
+              'echo $CODEBUILD_RESOLVED_SOURCE_VERSION',
+              'cat fixfiles/newfile1.md',
+            ],
           },
-        }),
+        },
       }),
-      input: sourceOutput,
-    })
+    });
+
+    const buildActions: codepipeline_actions.CodeBuildAction[] = [];
+    for (let i = 0; i < 3; i++) {
+      const buildAction = new codepipeline_actions.CodeBuildAction({
+        actionName: `Build-${i}`,
+        project: build,
+        input: sourceOutput,
+      })
+      buildActions.push(buildAction);
+    }
+
 
     // pipeline.addTrigger({
     //   providerType: codepipeline.ProviderType.CODE_STAR_SOURCE_CONNECTION,
@@ -63,12 +70,12 @@ export class CdkStack extends cdk.Stack {
 
     pipeline.addStage({
       stageName: 'Build',
-      actions: [buildAction],
+      actions: buildActions,
     });
 
     pipeline.addStage({
       stageName: 'Deploy',
-      actions: [buildAction],
+      actions: buildActions,
     });
 
   }
