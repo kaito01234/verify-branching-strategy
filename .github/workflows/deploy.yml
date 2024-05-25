@@ -156,13 +156,11 @@ jobs:
             console.log(releaseNotes);
 
             const data = new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit"})
-            const title = $releaseTag
 
             await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: releaseTag,
-              name: title,
               body: releaseNotes.data.body,
             });
         env:
