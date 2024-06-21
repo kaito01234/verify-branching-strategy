@@ -64,7 +64,7 @@ jobs:
               repo: context.repo.repo,
               per_page: 1
             })
-            const previousTag = previousTags.data.length > 0 ? tags.data[0].name : '';
+            const previousTag = previousTags.data.length > 0 ? previousTags.data[0].name : '';
 
             console.log(previousTag)
             return previousTag
