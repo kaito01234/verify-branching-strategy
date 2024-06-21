@@ -27,7 +27,6 @@ jobs:
         id: release-tag
         with:
           script: |
-            // 現在日時
             const currentDatatime = process.env.CURRENT_DATETIME
 
             let releaseCount = 1
