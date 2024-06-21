@@ -50,6 +50,7 @@ jobs:
             console.log(releaseTag)
 
             return releaseTag
+          result-encoding: string
         env:
           TAG: ${{ github.event.inputs.tag }}
 
@@ -70,6 +71,7 @@ jobs:
             }
             console.log(previousTag)
             return previousTag
+          result-encoding: string
 
       - name: Push release tag
         run: |
@@ -102,6 +104,7 @@ jobs:
               tag_name: releaseTag,
               body: releaseNotes.data.body,
             });
+          result-encoding: string
         env:
           PREVIOUS_TAG: ${{ steps.get-previous.outputs.result }}
           RELEASE_TAG: ${{ steps.release-tag.outputs.result }}
