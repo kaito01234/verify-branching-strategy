@@ -59,16 +59,15 @@ jobs:
         id: get-previous
         with:
           script: |
-            let previousTag
+            let previousTag = ''
 
             const previousTags = await github.rest.repos.listTags({
               owner: context.repo.owner,
               repo: context.repo.repo,
               per_page: 1
             })
-            if (previousTags.data.length > 0) {
-              previousTag = tags.data[0].name
-            }
+            const previousTag = previousTags.data.length > 0 ? tags.data[0].name : '';
+
             console.log(previousTag)
             return previousTag
           result-encoding: string
