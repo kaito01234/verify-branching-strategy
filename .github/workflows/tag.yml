@@ -34,7 +34,7 @@ jobs:
             let releaseTag
 
             while (true) {
-              releaseTag = `${currentDatatime}-${String(releaseCount).padStart(3, '0')}`
+              releaseTag = `v${currentDatatime}-${String(releaseCount).padStart(3, '0')}`
               try {
                 await github.rest.git.getRef({
                   owner: context.repo.owner,
